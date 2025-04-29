@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "chat_optimizer_bot",
+      "cwd": "./",
+      "script": "yarn start:watch",
+    }
+  ]
+}
+

@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRoles {
+  CHATER
+  ADMINISTRATOR
+}
+
+model Event {
+  id            Int       @id @default(autoincrement())
+  created_by_id Int
+  created_by    User      @relation("event_created_by", fields: [created_by_id], references: [id])
+  name          String
+  description   String?
+  date          DateTime
+  place         String?
+  image_url     String?
+  members       User[]    @relation("event_members")
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt()
+}
+
+model Message {
+  id            Int       @id @default(autoincrement())
+  created_at    DateTime  @default(now())
+  content_text  String
+  reply_text    String?
+  reply_name    String?
+  owner_telegram_id String
+  owner         User      @relation("user_messages", fields: [owner_telegram_id], references: [telegram_id])
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  role          UserRoles @default(CHATER)
+  telegram_id   String    @unique
+  name          String?
+  messages      Message[] @relation("user_messages")
+  events        Event[]   @relation("event_members")
+  created_events Event[]  @relation("event_created_by")
+}
+
+
